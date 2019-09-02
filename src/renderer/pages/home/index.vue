@@ -8,24 +8,7 @@
       <sidebar key="paths" :options="paths" @select="pathSelect" />
     </div>
     <div class="page-content">
-      <el-form label-width="80px">
-        <el-form-item label="路径">
-          <el-input v-model="form.path"></el-input>
-        </el-form-item>
-        <el-form-item label="方式">
-          <selector :options="methodsList" v-model="form.method"/>
-        </el-form-item>
-        <el-form-item label="内容">
-          <vue-json-editor
-            v-model="json"
-            mode="code">
-          </vue-json-editor>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary">保存</el-button>
-          <el-button type="text">重置</el-button>
-        </el-form-item>
-      </el-form>
+      <content-editor @confirm="confirm" />
     </div>
   </div>
 </template>
@@ -33,24 +16,16 @@
 <script>
 import { mapState } from 'vuex'
 import db from '../../../db'
-import vueJsonEditor from 'vue-json-editor'
 import { start, stop } from '../../utils/server'
 import Sidebar from '../../components/sidebar'
-import Selector from '../../components/selector'
-import { METHODS_LIST } from './data'
+import ContentEditor from './content-editor'
 
 export default {
-  components: { vueJsonEditor, Sidebar, Selector },
+  components: { Sidebar, ContentEditor },
 
   data () {
-    this.methodsList = METHODS_LIST
     return {
-      json: {},
-      status: false,
-      form: {
-        path: '',
-        method: METHODS_LIST[0].value
-      }
+      status: false
     }
   },
 
@@ -73,6 +48,9 @@ export default {
     },
     pathSelect (option) {
       console.log('pathselect', option)
+    },
+    confirm (v) {
+      console.log('confirmchange', v)
     }
   },
 
