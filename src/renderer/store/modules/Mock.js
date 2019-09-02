@@ -1,6 +1,6 @@
 const state = {
-  projects: [],
-  paths: []
+  projects: ['env'],
+  paths: ['path1', 'path2']
 }
 
 const mutations = {

@@ -12,11 +12,10 @@ if (!fs.pathExistsSync(STORE_PATH)) { // 如果不存在路径
   fs.mkdirpSync(STORE_PATH) // 就创建
 }
 
-const adapter = new FileSync(path.join(STORE_PATH, '/data.json')) // 初始化lowdb读写的json文件名以及存储路径
+const adapter = new FileSync(path.join(STORE_PATH, '/mockapp-data.json')) // 初始化lowdb读写的json文件名以及存储路径
 
 const db = Datastore(adapter) // lowdb接管该文件
 
-db.defaults({ mockData: {} })
-  .write()
+db.defaults({ mockData: {} }).write()
 
 export default db // 暴露出去
