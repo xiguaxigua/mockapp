@@ -5,10 +5,13 @@
       <div class="status-content">
         <el-switch v-model="status" />
       </div>
+      <div class="status-content">
+        <el-button @click="addNewPath">新增路径</el-button>
+      </div>
       <sidebar key="paths" :options="paths" :selected.sync="pathSelected" />
     </div>
     <div class="page-content">
-      <content-editor :form="currentItem" @confirm="confirm" />
+      <content-editor :form="currentItem" @confirm="confirm" @del="deleteItem" />
     </div>
   </div>
 </template>
@@ -90,6 +93,44 @@ export default {
       db.set('mockData', this.allData).write()
       restart(this.selectedEnv)
       this.initList(this.allData, v)
+    },
+    getDefaultContent () {
+      return {
+        path: `/${Date.now()}`,
+        method: 'get',
+        content: {}
+      }
+    },
+    addNewPath () {
+      const { projectSelected, pathSelected } = this
+      this.allData.some(({ env, data }) => {
+        if (env === projectSelected) {
+          data.push(this.getDefaultContent())
+          return true
+        }
+      })
+      db.set('mockData', this.allData).write()
+      restart(this.selectedEnv)
+      this.initList(this.allData, { path: pathSelected })
+    },
+    deleteItem () {
+      this.$confirm('是否确认删除？').then(() => {
+        const { projectSelected, pathSelected } = this
+        this.allData.some(({ env, data }) => {
+          if (env === projectSelected) {
+            data.some((d, index) => {
+              if (d.path === pathSelected) {
+                data.splice(index, 1)
+                return true
+              }
+            })
+            return true
+          }
+        })
+        db.set('mockData', this.allData).write()
+        restart(this.selectedEnv)
+        this.initList(this.allData)
+      }, () => {})
     }
   },
 
@@ -101,11 +142,6 @@ export default {
 
   mounted () {
     this.init()
-    // const data = db.get('mockData').value()
-    // console.log(data)
-    // db.get('mockData').set('env1', {}).write()
-    // console.log(db.get('mockData').value())
-    // console.log(this.projects)
   }
 }
 </script>

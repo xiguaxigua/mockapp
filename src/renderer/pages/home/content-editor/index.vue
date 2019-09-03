@@ -14,7 +14,8 @@
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="confirm">保存</el-button>
-      <el-button type="text" @click="reset">重置</el-button>
+      <el-button type="default" @click="reset">重置</el-button>
+      <el-button type="text" @click="del">删除</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -58,6 +59,10 @@ export default {
 
     confirm () {
       this.$emit('confirm', this.formData)
+    },
+
+    del () {
+      this.$emit('del')
     }
   }
 }
