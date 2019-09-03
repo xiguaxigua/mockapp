@@ -31,6 +31,7 @@ import { start, stop, restart } from '../../utils/server'
 import Sidebar from '../../components/sidebar'
 import ContentEditor from './content-editor'
 import SettingsDialog from './settings-dialog'
+import { find, noop, findIndex } from 'lodash'
 
 export default {
   components: { Sidebar, ContentEditor, SettingsDialog },
@@ -50,29 +51,11 @@ export default {
   computed: {
     currentItem ({ projectSelected, pathSelected, allData }) {
       if (!projectSelected || !pathSelected || !allData) return null
-      let result = null
-      this.allData.some(({ env, data }) => {
-        if (env === projectSelected) {
-          data.some(d => {
-            if (d.path === pathSelected) {
-              result = d
-              return true
-            }
-          })
-          return true
-        }
-      })
-      return result
+      const currEnv = find(this.allData, { env: projectSelected })
+      return find(currEnv.data, { path: pathSelected })
     },
     selectedEnv ({ projectSelected }) {
-      let result = null
-      this.allData.some(({ env, data }) => {
-        if (env === projectSelected) {
-          result = data
-          return true
-        }
-      })
-      return result
+      return find(this.allData, { env: projectSelected })
     }
   },
 
@@ -80,30 +63,35 @@ export default {
     init () {
       const data = db.get('mockData').value()
       this.allData = data
+      this.initProjects(data)
+      this.initPaths(data)
+    },
+    initProjects (data) {
       this.projects = data.map(({ env }) => env)
       this.projectSelected = this.projects[0]
-      this.initList(data)
     },
-    initList (data, selected) {
+    initPaths (data, selected) {
       this.paths = data[0].data.map(({ path }) => path)
       this.pathSelected = selected ? selected.path : this.paths[0]
     },
-    confirm (v) {
-      const { projectSelected, pathSelected } = this
-      this.allData.some(({ env, data }) => {
-        if (env === projectSelected) {
-          data.some((d, index) => {
-            if (d.path === pathSelected) {
-              data[index] = v
-              return true
-            }
-          })
-          return true
-        }
-      })
+    save () {
       db.set('mockData', this.allData).write()
-      restart(this.selectedEnv)
-      this.initList(this.allData, v)
+      restart(this.selectedEnv.data)
+    },
+    confirm (v) {
+      const { path } = v
+      if (this.paths.includes(path)) {
+        this.$message('路径存在重复，请检查~')
+        return
+      }
+
+      const { projectSelected, pathSelected } = this
+      const currEnv = find(this.allData, { env: projectSelected })
+      const currPathIndex = findIndex(currEnv.data, { path: pathSelected })
+      currEnv.data[currPathIndex] = v
+
+      this.save()
+      this.initPaths(this.allData, v)
     },
     getDefaultContent () {
       return {
@@ -114,34 +102,22 @@ export default {
     },
     addNewPath () {
       const { projectSelected, pathSelected } = this
-      this.allData.some(({ env, data }) => {
-        if (env === projectSelected) {
-          data.push(this.getDefaultContent())
-          return true
-        }
-      })
-      db.set('mockData', this.allData).write()
-      restart(this.selectedEnv)
-      this.initList(this.allData, { path: pathSelected })
+      const currEnv = find(this.allData, { env: projectSelected })
+      currEnv.data.push(this.getDefaultContent())
+
+      this.save()
+      this.initPaths(this.allData, { path: pathSelected })
     },
     deleteItem () {
       this.$confirm('是否确认删除？').then(() => {
         const { projectSelected, pathSelected } = this
-        this.allData.some(({ env, data }) => {
-          if (env === projectSelected) {
-            data.some((d, index) => {
-              if (d.path === pathSelected) {
-                data.splice(index, 1)
-                return true
-              }
-            })
-            return true
-          }
-        })
-        db.set('mockData', this.allData).write()
-        restart(this.selectedEnv)
-        this.initList(this.allData)
-      }, () => {})
+        const currEnv = find(this.allData, { env: projectSelected })
+        const currPathIndex = findIndex(currEnv.data, { path: pathSelected })
+        currEnv.data.splice(currPathIndex, 1)
+
+        this.save()
+        this.initPaths(this.allData)
+      }, noop)
     },
     showSettings () {
       this.visible = true
@@ -150,7 +126,7 @@ export default {
 
   watch: {
     status (v) {
-      v ? start(this.selectedEnv) : stop()
+      v ? start(this.selectedEnv.data) : stop()
     }
   },
 
