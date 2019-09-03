@@ -2,9 +2,17 @@ import Koa from 'koa'
 import Router from 'koa-router'
 import cors from '@koa/cors'
 import destroyable from 'server-destroy'
+import { cloneDeep } from 'lodash'
 
-let getRoutes = {}
-let postRoutes = {}
+const DEAULT_ROUTES = {
+  get: {},
+  post: {},
+  put: {},
+  patch: {},
+  delete: {},
+  head: {}
+}
+let routesMap = cloneDeep(DEAULT_ROUTES)
 
 const app = new Koa()
 const router = new Router()
@@ -13,11 +21,13 @@ app.use(cors())
 app.use(router.routes()).use(router.allowedMethods())
 let server = null
 
-router.get('*', ctx => {
-  if (getRoutes[ctx.path]) {
-    ctx.body = getRoutes[ctx.path]
+router.all('*', ctx => {
+  const { method, path } = ctx
+  const realMethod = method.toLowerCase()
+  if (routesMap[realMethod][path]) {
+    ctx.body = routesMap[realMethod][path]
   } else {
-    ctx.body = 'Hello World!'
+    ctx.body = '当前路径未配置'
   }
 })
 
@@ -26,19 +36,13 @@ router.post('*', ctx => {
 })
 
 function setRoutes (routes) {
-  console.log(routes)
-  getRoutes = {}
+  routesMap = cloneDeep(DEAULT_ROUTES)
   routes.forEach(({ path, method, content }) => {
-    if (method === 'get') {
-      getRoutes[path] = content
-    } else {
-      postRoutes[path] = content
-    }
+    routesMap[method][path] = content
   })
 }
 
 export function start (routes) {
-  console.log('routes', routes)
   setRoutes(routes)
   server = app.listen(9527)
   destroyable(server)

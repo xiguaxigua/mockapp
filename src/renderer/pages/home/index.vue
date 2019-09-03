@@ -13,6 +13,15 @@
     <div class="page-content">
       <content-editor :form="currentItem" @confirm="confirm" @del="deleteItem" />
     </div>
+    <el-button
+      type="primary"
+      class="settings-btn"
+      icon="el-icon-setting"
+      circle
+      @click="showSettings" />
+    <el-dialog :visible.sync="visible" title="设置">
+      <settings-dialog />
+    </el-dialog>
   </div>
 </template>
 
@@ -21,9 +30,10 @@ import db from '../../../db'
 import { start, stop, restart } from '../../utils/server'
 import Sidebar from '../../components/sidebar'
 import ContentEditor from './content-editor'
+import SettingsDialog from './settings-dialog'
 
 export default {
-  components: { Sidebar, ContentEditor },
+  components: { Sidebar, ContentEditor, SettingsDialog },
 
   data () {
     return {
@@ -32,7 +42,8 @@ export default {
       paths: [],
       projectSelected: null,
       pathSelected: null,
-      addData: null
+      addData: null,
+      visible: false
     }
   },
 
@@ -131,6 +142,9 @@ export default {
         restart(this.selectedEnv)
         this.initList(this.allData)
       }, () => {})
+    },
+    showSettings () {
+      this.visible = true
     }
   },
 
@@ -150,6 +164,12 @@ export default {
 .page-home {
   height: 100%;
   display: flex;
+
+  .settings-btn {
+    position: fixed;
+    left: 5px;
+    bottom: 5px;
+  }
 
   .path-content {
     width: 150px;

@@ -2,6 +2,7 @@
   <el-form label-width="80px">
     <el-form-item>
       <el-button @click="copy">拷贝链接</el-button>
+      <el-button @click="open">在浏览器中打开链接</el-button>
     </el-form-item>
     <el-form-item label="路径">
       <el-input v-model="formData.path"></el-input>
@@ -29,6 +30,7 @@ import Selector from '../../../components/selector'
 import vueJsonEditor from '../../../components/jsoneditor'
 import { METHODS_LIST } from '../data'
 import copy from 'copy-to-clipboard'
+import open from 'open'
 
 export default {
   components: { Selector, vueJsonEditor },
@@ -47,6 +49,12 @@ export default {
         method: METHODS_LIST[0].value,
         content: {}
       }
+    }
+  },
+
+  computed: {
+    link () {
+      return `http://localhost:9527${this.formData.path}`
     }
   },
 
@@ -70,8 +78,12 @@ export default {
     },
 
     copy () {
-      copy(`http://localhost:9527${this.formData.path}`)
+      copy(this.link)
       this.$message('复制成功')
+    },
+
+    open () {
+      open(this.link)
     }
   }
 }
