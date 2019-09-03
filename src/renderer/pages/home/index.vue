@@ -1,17 +1,24 @@
 <template>
   <div class="page-home">
-    <sidebar key="projects" :options="projects" :selected.sync="projectSelected" />
+    <sidebar
+      key="projects"
+      :options="projects"
+      :selected.sync="projectSelected" />
     <div class="path-content">
       <div class="status-content">
         <el-switch v-model="status" />
+        <!-- <el-input class="port-input" v-model="currPort" /> -->
       </div>
-      <div class="status-content">
+      <div class="status-content center">
         <el-button @click="addNewPath">新增路径</el-button>
       </div>
       <sidebar key="paths" :options="paths" :selected.sync="pathSelected" />
     </div>
     <div class="page-content">
-      <content-editor :form="currentItem" @confirm="confirm" @del="deleteItem" />
+      <content-editor
+        :form="currentItem"
+        @confirm="confirm"
+        @del="deleteItem" />
     </div>
     <el-button
       type="primary"
@@ -44,7 +51,8 @@ export default {
       projectSelected: null,
       pathSelected: null,
       addData: null,
-      visible: false
+      visible: false,
+      currPort: 9527
     }
   },
 
@@ -80,18 +88,19 @@ export default {
     },
     confirm (v) {
       const { path } = v
-      if (this.paths.includes(path)) {
-        this.$message('路径存在重复，请检查~')
+      const { projectSelected, pathSelected } = this
+      if (this.paths.includes(path) && path !== pathSelected) {
+        this.$message.error('路径存在重复，请检查~')
         return
       }
 
-      const { projectSelected, pathSelected } = this
       const currEnv = find(this.allData, { env: projectSelected })
       const currPathIndex = findIndex(currEnv.data, { path: pathSelected })
       currEnv.data[currPathIndex] = v
 
       this.save()
       this.initPaths(this.allData, v)
+      this.$message.success('保存成功')
     },
     getDefaultContent () {
       return {
@@ -153,11 +162,16 @@ export default {
     flex-direction: column;
     border-right: 1px solid #eee;
 
+    .port-input {
+      width: 80px;
+    }
+
     .status-content {
-      text-align: center;
       border-bottom: 1px solid #eee;
       height: 50px;
       line-height: 50px;
+      padding-left: 5px;
+      text-align: center;
     }
 
     .component-sidebar {

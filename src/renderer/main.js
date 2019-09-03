@@ -14,6 +14,7 @@ Vue.use(ElementUI, { size: 'small' })
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
+Vue.config.silent = true
 
 /* eslint-disable no-new */
 new Vue({
