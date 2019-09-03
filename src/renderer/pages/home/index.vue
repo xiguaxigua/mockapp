@@ -1,22 +1,21 @@
 <template>
   <div class="page-home">
-    <sidebar key="projects" :options="projects" />
+    <sidebar key="projects" :options="projects" :selected.sync="projectSelected" />
     <div class="path-content">
       <div class="status-content">
         <el-switch v-model="status" />
       </div>
-      <sidebar key="paths" :options="paths" @select="pathSelect" />
+      <sidebar key="paths" :options="paths" :selected.sync="pathSelected" />
     </div>
     <div class="page-content">
-      <content-editor @confirm="confirm" />
+      <content-editor :form="currentItem" @confirm="confirm" />
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import db from '../../../db'
-import { start, stop } from '../../utils/server'
+import { start, stop, restart } from '../../utils/server'
 import Sidebar from '../../components/sidebar'
 import ContentEditor from './content-editor'
 
@@ -25,47 +24,88 @@ export default {
 
   data () {
     return {
-      status: false
+      status: false,
+      projects: [],
+      paths: [],
+      projectSelected: null,
+      pathSelected: null,
+      addData: null
     }
   },
 
   computed: {
-    ...mapState({
-      projects: state => state.Mock.projects,
-      paths: state => state.Mock.paths
-    })
+    currentItem ({ projectSelected, pathSelected, allData }) {
+      if (!projectSelected || !pathSelected || !allData) return null
+      let result = null
+      this.allData.some(({ env, data }) => {
+        if (env === projectSelected) {
+          data.some(d => {
+            if (d.path === pathSelected) {
+              result = d
+              return true
+            }
+          })
+          return true
+        }
+      })
+      return result
+    },
+    selectedEnv ({ projectSelected }) {
+      let result = null
+      this.allData.some(({ env, data }) => {
+        if (env === projectSelected) {
+          result = data
+          return true
+        }
+      })
+      return result
+    }
   },
 
   methods: {
-    onJsonChange (v) {
-      console.log(v)
+    init () {
+      const data = db.get('mockData').value()
+      this.allData = data
+      this.projects = data.map(({ env }) => env)
+      this.projectSelected = this.projects[0]
+      this.initList(data)
     },
-    start () {
-      start()
-    },
-    stop () {
-      stop()
-    },
-    pathSelect (option) {
-      console.log('pathselect', option)
+    initList (data, selected) {
+      this.paths = data[0].data.map(({ path }) => path)
+      this.pathSelected = selected ? selected.path : this.paths[0]
     },
     confirm (v) {
-      console.log('confirmchange', v)
+      const { projectSelected, pathSelected } = this
+      this.allData.some(({ env, data }) => {
+        if (env === projectSelected) {
+          data.some((d, index) => {
+            if (d.path === pathSelected) {
+              data[index] = v
+              return true
+            }
+          })
+          return true
+        }
+      })
+      db.set('mockData', this.allData).write()
+      restart(this.selectedEnv)
+      this.initList(this.allData, v)
     }
   },
 
   watch: {
     status (v) {
-      v ? start() : stop()
+      v ? start(this.selectedEnv) : stop()
     }
   },
 
   mounted () {
-    const data = db.get('mockData').value()
-    console.log(data)
-    db.get('mockData').set('env1', {}).write()
-    console.log(db.get('mockData').value())
-    console.log(this.projects)
+    this.init()
+    // const data = db.get('mockData').value()
+    // console.log(data)
+    // db.get('mockData').set('env1', {}).write()
+    // console.log(db.get('mockData').value())
+    // console.log(this.projects)
   }
 }
 </script>

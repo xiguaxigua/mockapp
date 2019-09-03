@@ -32,7 +32,6 @@
     "koa-static": "^5.0.0",
     "lodash": "^4.17.15",
     "lowdb": "^1.0.0",
-    "monaco-editor-vue": "^1.0.9",
     "server-destroy": "^1.0.1",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",

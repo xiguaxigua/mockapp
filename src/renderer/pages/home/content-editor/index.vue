@@ -47,7 +47,7 @@ export default {
 
   watch: {
     form (v) {
-      this.formData = cloneDeep(v)
+      if (v) this.formData = cloneDeep(v)
     }
   },
 

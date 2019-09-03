@@ -4,6 +4,21 @@ import path from 'path'
 import fs from 'fs-extra'
 import { app, remote } from 'electron'
 
+const defaultData = {
+  mockData: [
+    {
+      env: 'env',
+      data: [
+        {
+          path: '/',
+          method: 'get',
+          content: {}
+        }
+      ]
+    }
+  ]
+}
+
 const APP = process.type === 'renderer' ? remote.app : app
 
 const STORE_PATH = APP.getPath('userData') // 获取electron应用的用户目录
@@ -16,6 +31,6 @@ const adapter = new FileSync(path.join(STORE_PATH, '/mockapp-data.json')) // 初
 
 const db = Datastore(adapter) // lowdb接管该文件
 
-db.defaults({ mockData: {} }).write()
+db.defaults(defaultData).write()
 
 export default db // 暴露出去

@@ -4,6 +4,7 @@
       v-for="(option, index) in options"
       :key="index"
       @click="clickHandler(option)"
+      :class="`${innerSelected === option && 'selected'}`"
       class="side-item">
       {{option}}
     </div>
@@ -16,10 +17,20 @@ export default {
     options: {
       type: Array,
       default: []
+    },
+    selected: {}
+  },
+
+  computed: {
+    innerSelected: {
+      get () { return this.selected },
+      set (v) { this.$emit('update:selected', v) }
     }
   },
+
   methods: {
     clickHandler (option) {
+      this.innerSelected = option
       this.$emit('select', option)
     }
   }
@@ -42,6 +53,10 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    &.selected {
+      color: red;
+    }
   }
 }
 </style>

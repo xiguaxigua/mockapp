@@ -6096,19 +6096,6 @@ mksnapshot@^0.3.4:
     fs-extra "0.26.7"
     request "2.x"
 
-monaco-editor-vue@^1.0.9:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/monaco-editor-vue/-/monaco-editor-vue-1.0.9.tgz#e5c07065cef5af19b84ac409fbee690ef50879fa"
-  integrity sha512-E4hBPedloFN1ccE25LC+qL6d7uu8diQV1g/eEomBYUx4r+uGV8oawlkBjnR6wR1Bx529S5iuiXzlLKjx4MKPyQ==
-  dependencies:
-    monaco-editor "^0.17.1"
-    vue "^2.5.17"
-
-monaco-editor@^0.17.1:
-  version "0.17.1"
-  resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.17.1.tgz#8fbe96ca54bfa75262706e044f8f780e904aa45c"
-  integrity sha512-JAc0mtW7NeO+0SwPRcdkfDbWLgkqL9WfP1NbpP9wNASsW6oWqgZqNIWt4teymGjZIXTElx3dnQmUYHmVrJ7HxA==
-
 move-concurrently@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/move-concurrently/-/move-concurrently-1.0.1.tgz#be2c005fda32e0b29af1f05d7c4b33214c701f92"
@@ -9221,7 +9208,7 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@^2.2.6, vue@^2.5.16, vue@^2.5.17:
+vue@^2.2.6, vue@^2.5.16:
   version "2.6.10"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
   integrity sha512-ImThpeNU9HbdZL3utgMCq0oiMzAkt1mcgy3/E6zWC/G6AaQoeuFdsl9nDhTDU3X1R6FK7nsIUuRACVcjI+A2GQ==
