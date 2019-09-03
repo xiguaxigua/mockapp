@@ -42,6 +42,7 @@ export default {
   width: 150px;
   height: 100%;
   border-right: 1px solid #eee;
+  overflow-y: auto;
 
   .side-item {
     height: 50px;

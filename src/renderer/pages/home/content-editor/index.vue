@@ -1,5 +1,8 @@
 <template>
   <el-form label-width="80px">
+    <el-form-item>
+      <el-button @click="copy">拷贝链接</el-button>
+    </el-form-item>
     <el-form-item label="路径">
       <el-input v-model="formData.path"></el-input>
     </el-form-item>
@@ -23,8 +26,9 @@
 <script>
 import { cloneDeep } from 'lodash'
 import Selector from '../../../components/selector'
-import vueJsonEditor from 'vue-json-editor'
+import vueJsonEditor from '../../../components/jsoneditor'
 import { METHODS_LIST } from '../data'
+import copy from 'copy-to-clipboard'
 
 export default {
   components: { Selector, vueJsonEditor },
@@ -63,6 +67,11 @@ export default {
 
     del () {
       this.$emit('del')
+    },
+
+    copy () {
+      copy(`http://localhost:9527${this.formData.path}`)
+      this.$message('复制成功')
     }
   }
 }
