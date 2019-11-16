@@ -5,10 +5,8 @@
       <el-button @click="open">在浏览器中打开链接</el-button>
     </el-form-item>
     <el-form-item label="路径">
-      <el-input v-model="formData.path"></el-input>
-    </el-form-item>
-    <el-form-item label="方式">
-      <selector :options="methodsList" v-model="formData.method"/>
+      <selector class="method" :options="methodsList" v-model="formData.method"/>
+      <el-input class="path-input" v-model="formData.path"></el-input>
     </el-form-item>
     <el-form-item label="内容">
       <vue-json-editor
@@ -88,3 +86,17 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.path-input {
+  width: 300px !important;
+}
+
+.method {
+  width: 100px;
+}
+
+.el-form-item {
+  margin-bottom: 10px !important;
+}
+</style>

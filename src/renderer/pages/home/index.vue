@@ -164,6 +164,7 @@ export default {
 .page-home {
   height: 100%;
   display: flex;
+  min-width: 700px;
 
   .settings-btn {
     position: fixed;
