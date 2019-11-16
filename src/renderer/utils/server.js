@@ -31,10 +31,6 @@ router.all('*', ctx => {
   }
 })
 
-router.post('*', ctx => {
-  ctx.body = '123'
-})
-
 function setRoutes (routes) {
   routesMap = cloneDeep(DEAULT_ROUTES)
   routes.forEach(({ path, method, content }) => {

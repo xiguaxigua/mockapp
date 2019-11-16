@@ -45,8 +45,8 @@ export default {
   overflow-y: auto;
 
   .side-item {
-    height: 50px;
-    line-height: 50px;
+    height: 40px;
+    line-height: 40px;
     text-align: center;
     border-bottom: 1px solid #eee;
     cursor: pointer;
@@ -54,9 +54,10 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: #ccc;
 
     &.selected {
-      color: red;
+      color: #409EFF;
     }
   }
 }

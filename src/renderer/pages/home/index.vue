@@ -1,16 +1,29 @@
 <template>
   <div class="page-home">
-    <sidebar
+    <!-- <sidebar
       key="projects"
       :options="projects"
-      :selected.sync="projectSelected" />
+      :selected.sync="projectSelected" /> -->
     <div class="path-content">
+      <div class="status-content ip-container">
+        {{ip}}:9527
+        <!-- <el-input class="port-input" v-model="currPort" /> -->
+      </div>
       <div class="status-content">
-        <el-switch v-model="status" />
+        <label>服务状态：</label>
+        <el-switch
+          active-color="#13ce66"
+          inactive-color="#909399"
+          v-model="status" />
         <!-- <el-input class="port-input" v-model="currPort" /> -->
       </div>
       <div class="status-content center">
-        <el-button @click="addNewPath">新增路径</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-circle-plus"
+          @click="addNewPath">
+          新增路径
+        </el-button>
       </div>
       <sidebar key="paths" :options="paths" :selected.sync="pathSelected" />
     </div>
@@ -39,6 +52,7 @@ import Sidebar from '../../components/sidebar'
 import ContentEditor from './content-editor'
 import SettingsDialog from './settings-dialog'
 import { find, noop, findIndex } from 'lodash'
+import ip from 'ip'
 
 export default {
   components: { Sidebar, ContentEditor, SettingsDialog },
@@ -52,7 +66,8 @@ export default {
       pathSelected: null,
       addData: null,
       visible: false,
-      currPort: 9527
+      currPort: 9527,
+      ip: ip.address()
     }
   },
 
@@ -156,6 +171,11 @@ export default {
     bottom: 5px;
   }
 
+  .ip-container {
+    font-size: 14px;
+    color: #666;
+  }
+
   .path-content {
     width: 150px;
     display: flex;
@@ -164,12 +184,12 @@ export default {
 
     .port-input {
       width: 80px;
-    }
+    } 
 
     .status-content {
       border-bottom: 1px solid #eee;
-      height: 50px;
-      line-height: 50px;
+      height: 40px;
+      line-height: 40px;
       padding-left: 5px;
       text-align: center;
     }

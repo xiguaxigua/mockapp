@@ -10,7 +10,7 @@ const defaultData = {
       env: 'env',
       data: [
         {
-          path: '/',
+          path: `/${Date.now()}`,
           method: 'get',
           content: {}
         }
@@ -22,7 +22,7 @@ const defaultData = {
 const APP = process.type === 'renderer' ? remote.app : app
 
 const STORE_PATH = APP.getPath('userData') // 获取electron应用的用户目录
-console.log(STORE_PATH)
+
 if (!fs.pathExistsSync(STORE_PATH)) { // 如果不存在路径
   fs.mkdirpSync(STORE_PATH) // 就创建
 }
