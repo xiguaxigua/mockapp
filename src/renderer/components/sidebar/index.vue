@@ -45,12 +45,12 @@ export default {
   overflow-y: auto;
 
   .side-item {
-    height: 40px;
-    line-height: 40px;
-    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    text-align: left;
     border-bottom: 1px solid #eee;
     cursor: pointer;
-    padding: 0 5px;
+    padding: 0 8px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

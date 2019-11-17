@@ -30,7 +30,32 @@
     <el-form-item>
       <el-button type="primary" @click="confirm">保存</el-button>
       <el-button type="default" @click="reset">重置</el-button>
-      <el-button type="text" @click="del">删除</el-button>
+      <el-popover
+        placement="top"
+        width="160"
+        v-model="visible">
+        <p>确定删除吗？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button
+            size="mini"
+            type="text"
+            @click="visible = false">
+            取消
+          </el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            @click="del">
+            确定
+          </el-button>
+        </div>
+        <el-button
+          class="delete-button"
+          slot="reference"
+          type="text">
+          删除
+        </el-button>
+      </el-popover>
     </el-form-item>
   </el-form>
 </template>
@@ -62,7 +87,8 @@ export default {
         method: METHODS_LIST[0].value,
         content: {},
         time: 200
-      }
+      },
+      visible: false
     }
   },
 
@@ -88,6 +114,7 @@ export default {
     },
 
     del () {
+      this.visible = false
       this.$emit('del')
     },
 
@@ -114,6 +141,10 @@ export default {
 
 .method {
   width: 100px;
+}
+
+.delete-button {
+  margin-left: 10px !important;
 }
 
 .el-form-item {

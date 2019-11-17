@@ -51,7 +51,7 @@ import { start, stop, restart } from '../../utils/server'
 import Sidebar from '../../components/sidebar'
 import ContentEditor from './content-editor'
 import SettingsDialog from './settings-dialog'
-import { find, noop, findIndex } from 'lodash'
+import { find, findIndex } from 'lodash'
 import ip from 'ip'
 
 export default {
@@ -135,15 +135,13 @@ export default {
       this.initPaths(this.allData, { path: pathSelected })
     },
     deleteItem () {
-      this.$confirm('是否确认删除？').then(() => {
-        const { projectSelected, pathSelected } = this
-        const currEnv = find(this.allData, { env: projectSelected })
-        const currPathIndex = findIndex(currEnv.data, { path: pathSelected })
-        currEnv.data.splice(currPathIndex, 1)
+      const { projectSelected, pathSelected } = this
+      const currEnv = find(this.allData, { env: projectSelected })
+      const currPathIndex = findIndex(currEnv.data, { path: pathSelected })
+      currEnv.data.splice(currPathIndex, 1)
 
-        this.save()
-        this.initPaths(this.allData)
-      }, noop)
+      this.save()
+      this.initPaths(this.allData)
     },
     showSettings () {
       this.visible = true
