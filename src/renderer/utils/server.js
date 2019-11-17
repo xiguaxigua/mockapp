@@ -25,7 +25,20 @@ router.all('*', ctx => {
   const { method, path } = ctx
   const realMethod = method.toLowerCase()
   if (routesMap[realMethod][path]) {
-    ctx.body = routesMap[realMethod][path]
+    const { content, status, time } = routesMap[realMethod][path]
+
+    if (time) {
+      return new Promise(resolve => {
+        setTimeout(() => {
+          ctx.body = content
+          if (status) ctx.status = status
+          resolve()
+        }, time)
+      })
+    } else {
+      ctx.body = content
+      if (status) ctx.status = status
+    }
   } else {
     ctx.body = '当前路径未配置'
   }
@@ -33,8 +46,12 @@ router.all('*', ctx => {
 
 function setRoutes (routes) {
   routesMap = cloneDeep(DEAULT_ROUTES)
-  routes.forEach(({ path, method, content }) => {
-    routesMap[method][path] = content
+  routes.forEach(({ path, method, content, status, time }) => {
+    routesMap[method][path] = {
+      content,
+      status,
+      time
+    }
   })
 }
 

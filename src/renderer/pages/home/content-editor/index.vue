@@ -4,9 +4,22 @@
       <el-button @click="copy">拷贝链接</el-button>
       <el-button @click="open">在浏览器中打开链接</el-button>
     </el-form-item>
-    <el-form-item label="路径">
-      <selector class="method" :options="methodsList" v-model="formData.method"/>
-      <el-input class="path-input" v-model="formData.path"></el-input>
+    <el-form-item label="请求">
+      <selector
+        class="method"
+        :options="methodsList"
+        v-model="formData.method" />
+      <el-input class="path-input" v-model="formData.path" />
+    </el-form-item>
+    <el-form-item label="响应">
+      <selector
+        class="method"
+        :options="responseList"
+        v-model="formData.status"/>
+      <el-input
+        prefix-icon="el-icon-time"
+        class="time-input"
+        v-model="formData.time" />
     </el-form-item>
     <el-form-item label="内容">
       <vue-json-editor
@@ -26,7 +39,7 @@
 import { cloneDeep } from 'lodash'
 import Selector from '../../../components/selector'
 import vueJsonEditor from '../../../components/jsoneditor'
-import { METHODS_LIST } from '../data'
+import { METHODS_LIST, RESPONSE_LIST } from '../data'
 import copy from 'copy-to-clipboard'
 import open from 'open'
 
@@ -40,12 +53,15 @@ export default {
 
   data () {
     this.methodsList = METHODS_LIST
+    this.responseList = RESPONSE_LIST
 
     return {
       formData: {
         path: '',
+        status: RESPONSE_LIST[0].value,
         method: METHODS_LIST[0].value,
-        content: {}
+        content: {},
+        time: 200
       }
     }
   },
@@ -90,6 +106,10 @@ export default {
 <style lang="scss">
 .path-input {
   width: 300px !important;
+}
+
+.time-input {
+  width: 100px !important;
 }
 
 .method {

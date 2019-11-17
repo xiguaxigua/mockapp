@@ -2,6 +2,7 @@
   <el-select
     class="component-selector"
     v-model="selected"
+    filterable
     placeholder="请选择">
     <el-option
       v-for="item in options"

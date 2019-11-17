@@ -121,6 +121,8 @@ export default {
       return {
         path: `/${Date.now()}`,
         method: 'get',
+        status: 200,
+        time: 200,
         content: {}
       }
     },
