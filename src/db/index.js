@@ -4,6 +4,8 @@ import path from 'path'
 import fs from 'fs-extra'
 import { app, remote } from 'electron'
 
+const getRandomId = _ => `${Date.now()}${(Math.random() * 1e5).toFixed()}`
+
 const defaultData = {
   mockData: [
     {
@@ -11,6 +13,7 @@ const defaultData = {
       data: [
         {
           path: `/${Date.now()}`,
+          id: getRandomId(),
           method: 'get',
           content: {}
         }

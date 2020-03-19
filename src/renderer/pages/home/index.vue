@@ -48,6 +48,8 @@ import SettingsDialog from './settings-dialog'
 import { find, findIndex } from 'lodash'
 import ip from 'ip'
 
+export const getRandomId = _ => `${Date.now()}${(Math.random() * 1e5).toFixed()}`
+
 export default {
   components: { Sidebar, ContentEditor, SettingsDialog },
 
@@ -79,9 +81,16 @@ export default {
   methods: {
     init () {
       const data = db.get('mockData').value()
-      this.allData = data
+      this.allData = this.checkId(data)
       this.initProjects(data)
       this.initPaths(data)
+    },
+    checkId (data) {
+      data[0].data = data[0].data.map(item => {
+        if (!item.id) item.id = getRandomId()
+        return item
+      })
+      return data
     },
     initProjects (data) {
       this.projects = data.map(({ env }) => env)
@@ -108,7 +117,7 @@ export default {
     getDefaultContent () {
       return {
         path: `/${Date.now()}`,
-        id: Date.now(),
+        id: getRandomId(),
         method: 'get',
         status: 200,
         time: 200,
