@@ -1,13 +1,8 @@
 <template>
   <div class="page-home">
-    <!-- <sidebar
-      key="projects"
-      :options="projects"
-      :selected.sync="projectSelected" /> -->
     <div class="path-content">
       <div class="status-content ip-container">
         {{ip}}:9527
-        <!-- <el-input class="port-input" v-model="currPort" /> -->
       </div>
       <div class="status-content">
         <label>服务状态：</label>
@@ -15,7 +10,6 @@
           active-color="#13ce66"
           inactive-color="#909399"
           v-model="status" />
-        <!-- <el-input class="port-input" v-model="currPort" /> -->
       </div>
       <div class="status-content center">
         <el-button
@@ -75,7 +69,7 @@ export default {
     currentItem ({ projectSelected, pathSelected, allData }) {
       if (!projectSelected || !pathSelected || !allData) return null
       const currEnv = find(this.allData, { env: projectSelected })
-      return find(currEnv.data, { path: pathSelected })
+      return find(currEnv.data, { id: pathSelected.id })
     },
     selectedEnv ({ projectSelected }) {
       return find(this.allData, { env: projectSelected })
@@ -94,25 +88,19 @@ export default {
       this.projectSelected = this.projects[0]
     },
     initPaths (data, selected) {
-      this.paths = data[0].data.map(({ path }) => path)
-      this.pathSelected = selected ? selected.path : this.paths[0]
+      this.paths = data[0].data
+      this.pathSelected = selected || this.paths[0]
     },
     save () {
       db.set('mockData', this.allData).write()
       restart(this.selectedEnv.data)
     },
     confirm (v) {
-      const { path } = v
       const { projectSelected, pathSelected } = this
-      if (this.paths.includes(path) && path !== pathSelected) {
-        this.$message.error('路径存在重复，请检查~')
-        return
-      }
 
       const currEnv = find(this.allData, { env: projectSelected })
-      const currPathIndex = findIndex(currEnv.data, { path: pathSelected })
+      const currPathIndex = findIndex(currEnv.data, { id: pathSelected.id })
       currEnv.data[currPathIndex] = v
-
       this.save()
       this.initPaths(this.allData, v)
       this.$message.success('保存成功')
@@ -120,6 +108,7 @@ export default {
     getDefaultContent () {
       return {
         path: `/${Date.now()}`,
+        id: Date.now(),
         method: 'get',
         status: 200,
         time: 200,
@@ -127,17 +116,17 @@ export default {
       }
     },
     addNewPath () {
-      const { projectSelected, pathSelected } = this
+      const { projectSelected } = this
       const currEnv = find(this.allData, { env: projectSelected })
       currEnv.data.push(this.getDefaultContent())
 
       this.save()
-      this.initPaths(this.allData, { path: pathSelected })
+      this.initPaths(this.allData, currEnv.data[currEnv.data.length - 1])
     },
     deleteItem () {
       const { projectSelected, pathSelected } = this
       const currEnv = find(this.allData, { env: projectSelected })
-      const currPathIndex = findIndex(currEnv.data, { path: pathSelected })
+      const currPathIndex = findIndex(currEnv.data, { id: pathSelected.id })
       currEnv.data.splice(currPathIndex, 1)
 
       this.save()
@@ -178,7 +167,7 @@ export default {
   }
 
   .path-content {
-    width: 150px;
+    width: 200px;
     display: flex;
     flex-direction: column;
     border-right: 1px solid #eee;

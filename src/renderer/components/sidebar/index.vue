@@ -3,10 +3,10 @@
     <div
       v-for="(option, index) in options"
       :key="index"
-      @click="clickHandler(option)"
+      @click="innerSelected = option"
       :class="`${innerSelected === option && 'selected'}`"
       class="side-item">
-      {{option}}
+      [{{option.method}}]{{option.path}}
     </div>
   </div>
 </template>
@@ -26,20 +26,13 @@ export default {
       get () { return this.selected },
       set (v) { this.$emit('update:selected', v) }
     }
-  },
-
-  methods: {
-    clickHandler (option) {
-      this.innerSelected = option
-      this.$emit('select', option)
-    }
   }
 }
 </script>
 
 <style lang="scss">
 .component-sidebar {
-  width: 150px;
+  width: 200px;
   height: 100%;
   border-right: 1px solid #eee;
   overflow-y: auto;
