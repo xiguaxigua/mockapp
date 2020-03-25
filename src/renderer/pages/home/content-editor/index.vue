@@ -1,7 +1,7 @@
 <template>
   <el-form label-width="80px">
     <el-form-item>
-      <el-button @click="copy">拷贝链接</el-button>
+      <el-button @click="copy">复制链接</el-button>
       <el-button @click="open">在浏览器中打开链接</el-button>
     </el-form-item>
     <el-form-item label="请求">
@@ -120,7 +120,10 @@ export default {
 
     copy () {
       copy(this.link)
-      this.$message('复制成功')
+      this.$notify.success({
+        title: '复制成功',
+        duration: 1000
+      })
     },
 
     open () {

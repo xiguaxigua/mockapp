@@ -112,7 +112,10 @@ export default {
       currEnv.data[currPathIndex] = v
       this.save()
       this.initPaths(this.allData, v)
-      this.$message.success('保存成功')
+      this.$notify.success({
+        title: '保存成功',
+        duration: 1000
+      })
     },
     getDefaultContent () {
       return {
