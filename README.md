@@ -2,7 +2,13 @@
 
 > An electron-vue project
 
-#### Build Setup
+## Download
+
+https://github.com/xiguaxigua/mockapp/releases
+
+[国内] https://gitee.com/xigua-xigua/mockapp/releases
+
+## Build Setup
 
 ``` bash
 # install dependencies
